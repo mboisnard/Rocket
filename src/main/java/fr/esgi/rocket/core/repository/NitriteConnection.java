@@ -17,10 +17,10 @@ public class NitriteConnection implements Repository<Nitrite> {
 	private final String password;
 	
 	public NitriteConnection(
-		@Value("${info.rocket.db}") final String database,
-		@Value("${info.rocket.user}") final String user,
-		@Value("${info.rocket.password}") final String password
-	) {
+		@Value("${info.rocket.nitrite.db}") final String database,
+		@Value("${info.rocket.nitrite.user}") final String user,
+		@Value("${info.rocket.nitrite.password}") final String password) {
+
 		final String workingDir = System.getProperty("user.dir");
 		
 		this.connection = Optional.empty();

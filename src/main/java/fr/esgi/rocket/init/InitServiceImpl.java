@@ -17,6 +17,7 @@ class InitServiceImpl implements InitService {
 	
 	@Override
 	public void initRepository() {
+
 		final Optional<Nitrite> nitrite = connection.getConnection();
 		
 		if(nitrite.isPresent()) {
