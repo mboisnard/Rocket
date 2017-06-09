@@ -29,5 +29,8 @@ repositories {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
+	compile('org.dizitart:nitrite:1.0.1')
+	compile('com.googlecode.java-diff-utils:diffutils:1.3.0')
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
