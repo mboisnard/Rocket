@@ -1,12 +1,11 @@
 package fr.esgi.rocket.commit;
 
-import fr.esgi.rocket.core.command.Command;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommitCommand implements Command, CommandLineRunner {
+public class CommitCommand implements CommandLineRunner {
 
     private final String COMMIT_COMMAND;
     private final CommitService commitService;
@@ -16,11 +15,6 @@ public class CommitCommand implements Command, CommandLineRunner {
 
         COMMIT_COMMAND = commitCommand;
         this.commitService = commitService;
-    }
-
-    @Override
-    public void execute(final String... args) {
-
     }
 
     @Override

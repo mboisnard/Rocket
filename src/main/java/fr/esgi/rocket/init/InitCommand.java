@@ -1,12 +1,11 @@
 package fr.esgi.rocket.init;
 
-import fr.esgi.rocket.core.command.Command;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InitCommand implements Command, CommandLineRunner {
+public class InitCommand implements CommandLineRunner {
 	
 	private final String INIT_COMMAND;
 	private final InitService initService;
@@ -16,11 +15,6 @@ public class InitCommand implements Command, CommandLineRunner {
 
 		INIT_COMMAND = initCommand;
 		this.initService = initService;
-	}
-	
-	@Override
-	public void execute(final String... args) {
-		initService.initRepository();
 	}
 
 	@Override
