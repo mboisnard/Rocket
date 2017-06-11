@@ -1,0 +1,19 @@
+spring:
+  main:
+    banner-mode: 'off'
+
+logging:
+  level:
+    org.springframework: WARN
+    org.dizitart: WARN
+
+info:
+  rocket:
+    commands:
+      init: 'init'
+      add: 'add'
+      commit: 'commit'
+    nitrite:
+      db: '.rocket'
+      user: 'rocket'
+      password: 'rocket'
