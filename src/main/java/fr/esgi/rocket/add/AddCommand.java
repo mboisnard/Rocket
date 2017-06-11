@@ -10,7 +10,7 @@ public class AddCommand implements CommandLineRunner {
     private final String ADD_COMMAND;
     private final AddService addService;
     
-    AddCommand(@Value("${info.rocket.commands.add") final String addCommand,
+    public AddCommand(@Value("${info.rocket.commands.add}") final String addCommand,
                final AddService addService) {
         ADD_COMMAND = addCommand;
         this.addService = addService;

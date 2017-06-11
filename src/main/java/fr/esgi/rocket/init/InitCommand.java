@@ -21,8 +21,7 @@ public class InitCommand implements CommandLineRunner {
 	public void run(final String... args) throws Exception {
 
 		if (args.length > 0 && INIT_COMMAND.equals(args[0])) {
-			System.out.println("Hello");
-			//initService.initRepository();
+			initService.initRepository();
 		}
 	}
 }

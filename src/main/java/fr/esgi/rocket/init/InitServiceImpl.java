@@ -21,9 +21,11 @@ class InitServiceImpl implements InitService {
 		final Optional<Nitrite> nitrite = connection.getConnection();
 		
 		if(nitrite.isPresent()) {
+			connection.closeConnection();
 			throw new IllegalStateException("A Rocket repository is already initialized in this directory");
 		}
 		
 		connection.initDatabase();
+		connection.closeConnection();
 	}
 }

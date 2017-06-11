@@ -28,9 +28,8 @@ public class NitriteConnection implements Repository<Nitrite> {
 		this.user = user;
 		this.password = password;
 		
-		if(databaseExists()) {
+		if(databaseExists())
 			initDatabase();
-		}
 	}
 	
 	public final boolean databaseExists() {
@@ -45,8 +44,14 @@ public class NitriteConnection implements Repository<Nitrite> {
 				.openOrCreate(user, password)
 		);
 	}
-	
+
+	@Override
 	public Optional<Nitrite> getConnection() {
 		return connection;
+	}
+
+	@Override
+	public void closeConnection() {
+		connection.ifPresent(Nitrite::close);
 	}
 }
