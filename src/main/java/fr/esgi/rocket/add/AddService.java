@@ -6,6 +6,8 @@ import java.util.List;
 
 interface AddService {
 
+    void updateStagingArea(String regex);
+
     List<String> recursiveListPaths(Path path) throws IOException;
 
     List<String> getMatchingPaths(List<String> paths, String regex);

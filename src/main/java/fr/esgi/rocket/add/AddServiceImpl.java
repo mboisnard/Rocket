@@ -2,9 +2,12 @@ package fr.esgi.rocket.add;
 
 import difflib.DiffUtils;
 import difflib.Patch;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -18,17 +21,36 @@ import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
 
+@Slf4j
 @Service
 class AddServiceImpl implements AddService {
 
     private final StagingRepository stagingRepository;
 
-    AddServiceImpl(final StagingRepository stagingRepository) {
+    private final String DB_NAME;
+
+    AddServiceImpl(
+        final StagingRepository stagingRepository,
+        @Value("${info.rocket.nitrite.db}") final String dbName
+    ) {
         this.stagingRepository = stagingRepository;
+        this.DB_NAME = dbName;
     }
 
     @Override
-    public List<String> recursiveListPaths(final Path path) throws IOException {
+    public void updateStagingArea(final String regex) {
+        final Path workingDir = stringToPath(System.getProperty("user.dir"));
+        final String absolutesRegex = workingDir + File.separator + regex;
+
+        final List<String> projectFiles = recursiveListPaths(workingDir);
+        final List<String> matchingFiles = getMatchingPaths(projectFiles, absolutesRegex);
+        final List<StagingEntry> stagingEntries = matchingPathsToEntry(matchingFiles);
+
+        addToStagingArea(stagingEntries);
+    }
+
+    @Override
+    public List<String> recursiveListPaths(final Path path) {
         final List<String> files = new ArrayList<>();
 
         try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)) {
@@ -37,8 +59,14 @@ class AddServiceImpl implements AddService {
                     files.addAll(recursiveListPaths(entry));
                 }
 
+                if(entry.toString().endsWith(DB_NAME))
+                    continue;
+
                 files.add(entry.toString());
             }
+        }
+        catch (final IOException e) {
+            throw new StagingException(e);
         }
 
         return files;
@@ -65,9 +93,17 @@ class AddServiceImpl implements AddService {
 
     @Override
     public StagingEntry createEntry(final String path) {
+        final StringBuilder content = new StringBuilder();
+        final List<String> lines = fileToLines(path);
+
+        if(!lines.isEmpty()) {
+            lines.forEach(line -> content.append(line).append('\n'));
+        }
+
         return StagingEntry.builder()
             .fileName(path)
-            .diff(getDiff(path))
+            .diff(content.toString())
+            //.diff(getDiff(path))
             .build();
     }
 
@@ -79,7 +115,7 @@ class AddServiceImpl implements AddService {
         final StringBuilder deltas = new StringBuilder();
         final Patch patch = DiffUtils.diff(commits, newContent);
 
-        patch.getDeltas().forEach(delta -> deltas.append(delta.toString()).append("COUCOU"));
+        patch.getDeltas().forEach(delta -> deltas.append(delta.toString()).append("\n"));
         return deltas.toString();
     }
 

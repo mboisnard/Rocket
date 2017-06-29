@@ -1,13 +1,17 @@
 package fr.esgi.rocket.add;
 
 import fr.esgi.rocket.core.repository.NitriteConnection;
+import lombok.extern.slf4j.Slf4j;
 import org.dizitart.no2.Nitrite;
+import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.ObjectRepository;
+import org.dizitart.no2.objects.filters.ObjectFilters;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class StagingRepository {
 
@@ -27,7 +31,18 @@ public class StagingRepository {
         final Nitrite nitrite = connection.get();
         final ObjectRepository<StagingEntry> repository = nitrite.getRepository(StagingEntry.class);
 
-        repository.insert((StagingEntry[]) stagingEntries.toArray());
+        stagingEntries.forEach(entry -> {
+            final Cursor<StagingEntry> cursor = repository.find(ObjectFilters.eq("fileName", entry.getFileName()));
+
+            if(cursor.size() == 0) {
+                repository.insert(entry);
+            }
+            else {
+                repository.update(entry);
+            }
+
+            log.info(entry.getFileName() + " added to the staging area");
+        });
 
         nitriteConnection.closeConnection();
     }
