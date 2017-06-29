@@ -17,7 +17,7 @@ class StatusServiceImpl implements StatusService {
 
     @Override
     public void getStatus() {
-        stagingRepository.getAll().forEach(entry -> {
+        stagingRepository.getAll(false).forEach(entry -> {
             log.info(entry.getFileName());
         });
     }

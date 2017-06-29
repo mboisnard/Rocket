@@ -46,9 +46,10 @@ public class StagingRepository {
         });
 
         nitriteConnection.closeConnection();
+
     }
 
-    public List<StagingEntry> getAll() {
+    public List<StagingEntry> getAll(final boolean commit) {
         final Optional<Nitrite> connection =  nitriteConnection.getConnection();
 
         if (!connection.isPresent())
@@ -62,8 +63,24 @@ public class StagingRepository {
             entries.add(entry);
         });
 
-        nitriteConnection.closeConnection();
+        if(!commit) {
+            nitriteConnection.closeConnection();
+        }
 
         return entries;
+    }
+
+    public void deleteAll() {
+        final Optional<Nitrite> connection =  nitriteConnection.getConnection();
+
+        if (!connection.isPresent())
+            throw new StagingException("This is not a rocket repository");
+
+        final Nitrite nitrite = connection.get();
+        final ObjectRepository<StagingEntry> repository = nitrite.getRepository(StagingEntry.class);
+
+        repository.remove(ObjectFilters.ALL);
+
+        nitriteConnection.closeConnection();
     }
 }

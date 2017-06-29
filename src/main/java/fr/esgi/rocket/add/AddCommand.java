@@ -33,7 +33,6 @@ public class AddCommand implements CommandLineRunner {
             }
             catch(final StagingException e) {
                 log.error(e.getLocalizedMessage());
-                e.printStackTrace();
             }
         }
     }
