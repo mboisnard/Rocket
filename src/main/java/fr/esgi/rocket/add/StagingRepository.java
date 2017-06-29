@@ -8,6 +8,7 @@ import org.dizitart.no2.objects.ObjectRepository;
 import org.dizitart.no2.objects.filters.ObjectFilters;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,5 +46,24 @@ public class StagingRepository {
         });
 
         nitriteConnection.closeConnection();
+    }
+
+    public List<StagingEntry> getAll() {
+        final Optional<Nitrite> connection =  nitriteConnection.getConnection();
+
+        if (!connection.isPresent())
+            throw new StagingException("This is not a rocket repository");
+
+        final Nitrite nitrite = connection.get();
+        final ObjectRepository<StagingEntry> repository = nitrite.getRepository(StagingEntry.class);
+        final List<StagingEntry> entries = new ArrayList<>();
+
+        repository.find().forEach(entry -> {
+            entries.add(entry);
+        });
+
+        nitriteConnection.closeConnection();
+
+        return entries;
     }
 }

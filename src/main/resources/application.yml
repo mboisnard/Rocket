@@ -12,6 +12,7 @@ info:
     commands:
       init: 'init'
       add: 'add'
+      status: 'status'
       commit: 'commit'
     nitrite:
       db: '.rocket'
