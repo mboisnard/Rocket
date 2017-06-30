@@ -1,7 +1,6 @@
 language: java
 jdk:
   - oraclejdk8
-sudo: enabled
 script:
-  - ./gradlew jacocoTestReport --stacktrace
-  - ./gradlew sonarqube 
+  - bash ./gradlew jacocoTestReport --stacktrace
+  - bash ./gradlew sonarqube 
