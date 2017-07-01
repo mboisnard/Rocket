@@ -1,14 +1,20 @@
 language: java
+
 jdk:
   - oraclejdk8
+
 before_install:
   - chmod +x gradlew
+
 script:
   - ./gradlew jacocoTestReport --stacktrace
   - ./gradlew sonarqube 
+
 deploy:
-  provider: pages
+  provider: releases
   skip_cleanup: true
-  github_token: $GITHUB_TOKEN 
+  api_key: $GITHUB_TOKEN
+  file_glob: true
+  file: build/libs/*
   on:
     branch: master
